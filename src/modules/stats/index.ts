@@ -26,8 +26,6 @@ export namespace dogs {
             let BIGINT_ZERO = BigInt.fromI32(0);
 
             snapshot = new DailySnapshot(id);
-            snapshot.blockNumber = BIGINT_ZERO;
-            snapshot.timestamp = BIGINT_ZERO;
             snapshot.numOwners = BIGINT_ZERO;
             snapshot.dailyTransfersCount = 0;
         }
