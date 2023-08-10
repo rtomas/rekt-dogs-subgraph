@@ -1,6 +1,6 @@
 import { BigInt, Bytes } from "@graphprotocol/graph-ts";
 import { integer } from "@protofire/subgraph-toolkit";
-import { accounts, transactions, tokens, dogs, blocks } from "../modules";
+import { accounts, transactions, tokens, dogs } from "../modules";
 
 export namespace transfer {
     export function handleMint(to: Bytes, tokenId: BigInt, timestamp: BigInt, blockId: string, dogsInfoId: string, baseURI: string): void {
@@ -37,7 +37,13 @@ export namespace transfer {
         }
         dogsInfo.save();
 
+        let daily = dogs.getOrCreateDailySnapshot(timestamp);
+        daily.numOwners = dogsInfo.numOwners;
+        daily.block = blockId;
+        daily.save();
+
         let transaction = transactions.getNewMint(account.id, tokenIdStr, timestamp, blockId);
+
         transaction.save();
     }
 
@@ -56,6 +62,11 @@ export namespace transfer {
         let dogsInfo = dogs.getOrCreateDogsInfo(dogsInfoid);
         dogsInfo.numTokens = dogsInfo.numTokens.minus(integer.ONE);
         dogsInfo.lastBurned = timestamp;
+
+        let daily = dogs.getOrCreateDailySnapshot(timestamp);
+        daily.numOwners = dogsInfo.numOwners;
+        daily.block = blockId;
+        daily.save();
 
         // if token is 0, one less owner
         if (account.numTokens.equals(integer.ZERO)) {
@@ -93,6 +104,12 @@ export namespace transfer {
             dogsInfo.numOwners = dogsInfo.numOwners.plus(integer.ONE);
         }
         dogsInfo.save();
+
+        let daily = dogs.getOrCreateDailySnapshot(timestamp);
+        daily.dailyTransfersCount = daily.dailyTransfersCount + 1;
+        daily.numOwners = dogsInfo.numOwners;
+        daily.block = blockId;
+        daily.save();
 
         let transaction = transactions.getNewTransfer(seller.id, buyer.id, tokenIdStr, timestamp, blockId);
         transaction.save();

@@ -185,10 +185,7 @@ type DailySnapshot @entity {
     id: ID!
 
     " Block number where the snapshot is taken. "
-    blockNumber: BigInt!
-
-    " Block timestamp when the snapshot is taken. "
-    timestamp: BigInt!
+    block: Block!
 
     " Number of total owner up to the snapshot. "
     numOwners: BigInt!
