@@ -1,151 +1,198 @@
-type Approval @entity(immutable: true) {
-  id: Bytes!
-  owner: Bytes! # address
-  approved: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type DogsInfo @entity {
+    id: ID!
+
+    "Number of minted token"
+    numTokens: BigInt!
+
+    "number of owners"
+    numOwners: BigInt!
+
+    "number of different account's owners including the ones that have sell/burn"
+    numAccounts: BigInt!
+
+    "Last Minted time in seconds"
+    lastMintDate: BigInt!
+
+    "Last transfer in seconds"
+    lastTransferDate: BigInt!
+
+    "Last Burned in seconds"
+    lastBurned: BigInt!
 }
 
-type ApprovalForAll @entity(immutable: true) {
-  id: Bytes!
-  owner: Bytes! # address
-  operator: Bytes! # address
-  approved: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Block @entity {
+    "Internal ID "
+    id: ID!
+
+    "event timestamp"
+    timestamp: BigInt!
+
+    "Block's number"
+    number: BigInt!
+
+    "Transactions contained in this block"
+    transactions: [Transaction!] @derivedFrom(field: "block")
 }
 
-type ConsecutiveTransfer @entity(immutable: true) {
-  id: Bytes!
-  fromTokenId: BigInt! # uint256
-  toTokenId: BigInt! # uint256
-  from: Bytes! # address
-  to: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Token @entity {
+    "Id of the Token"
+    id: ID!
+
+    tokenID: BigInt!
+
+    "Owner's Account address"
+    owner: Account!
+
+    "URI that points the metadata of the NFT"
+    uri: String!
+
+    "Minted time in seconds (?)"
+    mintTime: BigInt!
+
+    "Transaction hash ultima vez que se tradeo"
+    transaction: Bytes!
+
+    "Current burned status"
+    burned: Boolean
 }
 
-type DisableIncreaseMaxMintableSupply @entity(immutable: true) {
-  id: Bytes!
+type Account @entity {
+    "address of the Account"
+    id: ID!
 
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+    "Address of the Account"
+    address: Bytes!
+
+    "Array of tokens owned by the Account"
+    tokens: [Token!]! @derivedFrom(field: "owner")
+
+    "number of tokens owned by the Account"
+    numTokens: BigInt!
 }
 
-type OwnershipTransferred @entity(immutable: true) {
-  id: Bytes!
-  previousOwner: Bytes! # address
-  newOwner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+enum TranasctionType {
+    MINT
+    BURN
+    TRANSFER
 }
 
-type PermanentBaseURI @entity(immutable: true) {
-  id: Bytes!
-  baseURI: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Transaction @entity {
+    "Internal ID used for indexation"
+    id: ID!
+
+    "Seller account"
+    from: Account
+
+    "Buyer account"
+    to: Account
+
+    "Current transaction type"
+    type: TranasctionType!
+
+    "Related block"
+    block: Block!
 }
 
-type SetActiveStage @entity(immutable: true) {
-  id: Bytes!
-  activeStage: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Burn implements Transaction @entity {
+    "hash of the transaction"
+    id: ID!
+
+    "Token transfer"
+    token: Token!
+
+    "Address of the sender"
+    from: Account
+
+    "Address of the receiver"
+    to: Account
+
+    "Transaction hash "
+    transaction: Bytes!
+
+    "Gas Limit"
+    gasLimit: BigInt!
+
+    "Gas Userd"
+    gasUsed: BigInt!
+
+    "Related block"
+    block: Block!
+
+    "Current transaction type"
+    type: TranasctionType!
 }
 
-type SetBaseURI @entity(immutable: true) {
-  id: Bytes!
-  baseURI: String! # string
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Mint implements Transaction @entity {
+    "hash of the transaction"
+    id: ID!
+
+    "Token transfer"
+    token: Token!
+
+    "Address of the sender"
+    from: Account
+
+    "Address of the receiver"
+    to: Account
+
+    "Transaction hash "
+    transaction: Bytes!
+
+    "Gas Limit"
+    gasLimit: BigInt!
+
+    "Gas Userd"
+    gasUsed: BigInt!
+
+    "Related block"
+    block: Block!
+
+    "Current transaction type"
+    type: TranasctionType!
 }
 
-type SetCosigner @entity(immutable: true) {
-  id: Bytes!
-  cosigner: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+type Transfer implements Transaction @entity {
+    "hash of the transaction"
+    id: ID!
+
+    "Token transfer"
+    token: Token!
+
+    "Address of the sender"
+    from: Account
+
+    "Address of the receiver"
+    to: Account
+
+    "Transaction hash "
+    transaction: Bytes!
+
+    "Gas Limit"
+    gasLimit: BigInt!
+
+    "Gas Userd"
+    gasUsed: BigInt!
+
+    "Related block"
+    block: Block!
+
+    "Current transaction type"
+    type: TranasctionType!
 }
 
-type SetCrossmintAddress @entity(immutable: true) {
-  id: Bytes!
-  crossmintAddress: Bytes! # address
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+type DailySnapshot @entity {
+    " { Contract address }-{# of days since Unix epoch time} "
+    id: ID!
 
-type SetGlobalWalletLimit @entity(immutable: true) {
-  id: Bytes!
-  globalWalletLimit: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+    " Block number where the snapshot is taken. "
+    blockNumber: BigInt!
 
-type SetMaxMintableSupply @entity(immutable: true) {
-  id: Bytes!
-  maxMintableSupply: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+    " Block timestamp when the snapshot is taken. "
+    timestamp: BigInt!
 
-type SetMintable @entity(immutable: true) {
-  id: Bytes!
-  mintable: Boolean! # bool
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
+    " Number of total owner up to the snapshot. "
+    numOwners: BigInt!
 
-type SetTimestampExpirySeconds @entity(immutable: true) {
-  id: Bytes!
-  expiry: BigInt! # uint64
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Transfer @entity(immutable: true) {
-  id: Bytes!
-  from: Bytes! # address
-  to: Bytes! # address
-  tokenId: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type UpdateStage @entity(immutable: true) {
-  id: Bytes!
-  stage: BigInt! # uint256
-  price: BigInt! # uint80
-  walletLimit: BigInt! # uint32
-  merkleRoot: Bytes! # bytes32
-  maxStageSupply: Int! # uint24
-  startTimeUnixSeconds: BigInt! # uint64
-  endTimeUnixSeconds: BigInt! # uint64
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
-}
-
-type Withdraw @entity(immutable: true) {
-  id: Bytes!
-  value: BigInt! # uint256
-  blockNumber: BigInt!
-  blockTimestamp: BigInt!
-  transactionHash: Bytes!
+    " Total tokens transfer daily. "
+    dailyTransfersCount: Int!
 }

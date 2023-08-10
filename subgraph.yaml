@@ -1,72 +1,24 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+    file: ./schema.graphql
 dataSources:
-  - kind: ethereum
-    name: ERC721MIncreasableOperatorFilterer
-    network: matic
-    source:
-      address: "0xAce8187B113a38F83Bd9C896C6878B175c234dCc"
-      abi: ERC721MIncreasableOperatorFilterer
-      startBlock: 39553696
-    mapping:
-      kind: ethereum/events
-      apiVersion: 0.0.7
-      language: wasm/assemblyscript
-      entities:
-        - Approval
-        - ApprovalForAll
-        - ConsecutiveTransfer
-        - DisableIncreaseMaxMintableSupply
-        - OwnershipTransferred
-        - PermanentBaseURI
-        - SetActiveStage
-        - SetBaseURI
-        - SetCosigner
-        - SetCrossmintAddress
-        - SetGlobalWalletLimit
-        - SetMaxMintableSupply
-        - SetMintable
-        - SetTimestampExpirySeconds
-        - Transfer
-        - UpdateStage
-        - Withdraw
-      abis:
-        - name: ERC721MIncreasableOperatorFilterer
-          file: ./abis/ERC721MIncreasableOperatorFilterer.json
-      eventHandlers:
-        - event: Approval(indexed address,indexed address,indexed uint256)
-          handler: handleApproval
-        - event: ApprovalForAll(indexed address,indexed address,bool)
-          handler: handleApprovalForAll
-        - event: ConsecutiveTransfer(indexed uint256,uint256,indexed address,indexed address)
-          handler: handleConsecutiveTransfer
-        - event: DisableIncreaseMaxMintableSupply()
-          handler: handleDisableIncreaseMaxMintableSupply
-        - event: OwnershipTransferred(indexed address,indexed address)
-          handler: handleOwnershipTransferred
-        - event: PermanentBaseURI(string)
-          handler: handlePermanentBaseURI
-        - event: SetActiveStage(uint256)
-          handler: handleSetActiveStage
-        - event: SetBaseURI(string)
-          handler: handleSetBaseURI
-        - event: SetCosigner(address)
-          handler: handleSetCosigner
-        - event: SetCrossmintAddress(address)
-          handler: handleSetCrossmintAddress
-        - event: SetGlobalWalletLimit(uint256)
-          handler: handleSetGlobalWalletLimit
-        - event: SetMaxMintableSupply(uint256)
-          handler: handleSetMaxMintableSupply
-        - event: SetMintable(bool)
-          handler: handleSetMintable
-        - event: SetTimestampExpirySeconds(uint64)
-          handler: handleSetTimestampExpirySeconds
-        - event: Transfer(indexed address,indexed address,indexed uint256)
-          handler: handleTransfer
-        - event: UpdateStage(uint256,uint80,uint32,bytes32,uint24,uint64,uint64)
-          handler: handleUpdateStage
-        - event: Withdraw(uint256)
-          handler: handleWithdraw
-      file: ./src/erc-721-m-increasable-operator-filterer.ts
+    - kind: ethereum
+      name: ERC721MIncreasableOperatorFilterer
+      network: matic
+      source:
+          address: "0xAce8187B113a38F83Bd9C896C6878B175c234dCc"
+          abi: ERC721MIncreasableOperatorFilterer
+          startBlock: 39553696
+      mapping:
+          kind: ethereum/events
+          apiVersion: 0.0.7
+          language: wasm/assemblyscript
+          entities:
+              - Transfer
+          abis:
+              - name: ERC721MIncreasableOperatorFilterer
+                file: ./abis/ERC721MIncreasableOperatorFilterer.json
+          eventHandlers:
+              - event: Transfer(indexed address,indexed address,indexed uint256)
+                handler: handleTransfer
+          file: ./src/mappings/index.ts
