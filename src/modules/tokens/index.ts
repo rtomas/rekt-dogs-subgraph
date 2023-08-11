@@ -13,6 +13,7 @@ export namespace tokens {
         if (token == null) {
             token = new Token(tokenId);
             token.owner = accountId;
+            token.mintTime = BigInt.fromI32(0);
         }
         return token as Token;
     }

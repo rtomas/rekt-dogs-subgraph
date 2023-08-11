@@ -1,4 +1,4 @@
-import { Bytes } from "@graphprotocol/graph-ts";
+import { Bytes, BigInt } from "@graphprotocol/graph-ts";
 import { ZERO_ADDRESS } from "@protofire/subgraph-toolkit";
 import { Account } from "../../../generated/schema";
 
@@ -10,6 +10,7 @@ export namespace accounts {
         if (account == null) {
             account = new Account(accountId);
             account.address = accountAddress;
+            account.numTokens = BigInt.fromI32(0);
         }
         return account as Account;
     }

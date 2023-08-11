@@ -5,6 +5,7 @@ import { DailySnapshot, DogsInfo } from "../../../generated/schema";
 export namespace dogs {
     export namespace helpers {
         export const SECONDS_PER_DAY = 24 * 60 * 60;
+        export const BIGINT_ZERO = BigInt.fromI32(0);
     }
     export function getOrCreateDogsInfo(num: String): DogsInfo {
         let id = num.toString();
@@ -12,8 +13,12 @@ export namespace dogs {
         let dogs = DogsInfo.load(id);
         if (dogs == null) {
             dogs = new DogsInfo(id);
-            dogs.numOwners = integer.ZERO;
-            dogs.numTokens = integer.ZERO;
+            dogs.numOwners = helpers.BIGINT_ZERO;
+            dogs.numTokens = helpers.BIGINT_ZERO;
+            dogs.numAccounts = helpers.BIGINT_ZERO;
+            dogs.lastMintDate = helpers.BIGINT_ZERO;
+            dogs.lastTransferDate = helpers.BIGINT_ZERO;
+            dogs.lastBurned = helpers.BIGINT_ZERO;
         }
         return dogs as DogsInfo;
     }

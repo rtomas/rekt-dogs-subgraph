@@ -29,9 +29,6 @@ type Block @entity {
 
     "Block's number"
     number: BigInt!
-
-    "Transactions contained in this block"
-    transactions: [Transaction!] @derivedFrom(field: "block")
 }
 
 type Token @entity {
@@ -48,9 +45,6 @@ type Token @entity {
 
     "Minted time in seconds (?)"
     mintTime: BigInt!
-
-    "Transaction hash ultima vez que se tradeo"
-    transaction: Bytes!
 
     "Current burned status"
     burned: Boolean
@@ -76,7 +70,7 @@ enum TranasctionType {
     TRANSFER
 }
 
-type Transaction @entity {
+interface Transaction {
     "Internal ID used for indexation"
     id: ID!
 
@@ -106,15 +100,6 @@ type Burn implements Transaction @entity {
     "Address of the receiver"
     to: Account
 
-    "Transaction hash "
-    transaction: Bytes!
-
-    "Gas Limit"
-    gasLimit: BigInt!
-
-    "Gas Userd"
-    gasUsed: BigInt!
-
     "Related block"
     block: Block!
 
@@ -135,15 +120,6 @@ type Mint implements Transaction @entity {
     "Address of the receiver"
     to: Account
 
-    "Transaction hash "
-    transaction: Bytes!
-
-    "Gas Limit"
-    gasLimit: BigInt!
-
-    "Gas Userd"
-    gasUsed: BigInt!
-
     "Related block"
     block: Block!
 
@@ -163,15 +139,6 @@ type Transfer implements Transaction @entity {
 
     "Address of the receiver"
     to: Account
-
-    "Transaction hash "
-    transaction: Bytes!
-
-    "Gas Limit"
-    gasLimit: BigInt!
-
-    "Gas Userd"
-    gasUsed: BigInt!
 
     "Related block"
     block: Block!
