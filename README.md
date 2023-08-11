@@ -15,6 +15,8 @@ https://opensea.io/collection/rektdogs
 
 ---
 
+**Deploy the subgraph**
+
 1. generate code:
    `graph codegen`
 
