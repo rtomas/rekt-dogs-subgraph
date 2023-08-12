@@ -160,3 +160,17 @@ type DailySnapshot @entity {
     " Total tokens transfer daily. "
     dailyTransfersCount: Int!
 }
+
+type MonthlySnapshot @entity {
+    " { Contract address }-{# of days since Unix epoch time} "
+    id: ID!
+
+    " Block number where the snapshot is taken. "
+    block: Block!
+
+    " Number of total owner up to the snapshot. "
+    numOwners: BigInt!
+
+    " Total tokens transfer monthly. "
+    monthlyTransfersCount: Int!
+}

@@ -4,10 +4,9 @@ import { Transfer } from "../../generated/ERC721MIncreasableOperatorFilterer/ERC
 import { transfer } from "./transfer";
 
 import { dogs, blocks } from "../modules";
-import { BigInt } from "@graphprotocol/graph-ts";
 
+// id for stats - just one
 let DOGS_ID = ADDRESS_ZERO;
-
 let BASE_URI = "https://opensea.io/assets/matic/0xace8187b113a38f83bd9c896c6878b175c234dcc/";
 
 export function handleTransfer(event: Transfer): void {
@@ -23,6 +22,7 @@ export function handleTransfer(event: Transfer): void {
     let block = blocks.getOrCreateBlock(blockId, timestamp, blockNumber);
     block.save();
 
+    // detect if it is a mint, burn or regular transfer
     if (from.toHex() == ADDRESS_ZERO) {
         transfer.handleMint(to, tokenId, timestamp, blockId, DOGS_ID, BASE_URI);
     } else if (to.toHex() == ADDRESS_ZERO) {

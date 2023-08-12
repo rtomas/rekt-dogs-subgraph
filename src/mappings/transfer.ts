@@ -42,6 +42,11 @@ export namespace transfer {
         daily.block = blockId;
         daily.save();
 
+        let monthly = dogs.getOrCreateMonthlySnapshot(timestamp);
+        monthly.numOwners = dogsInfo.numOwners;
+        monthly.block = blockId;
+        monthly.save();
+
         let transaction = transactions.getNewMint(account.id, tokenIdStr, timestamp, blockId);
 
         transaction.save();
@@ -67,6 +72,11 @@ export namespace transfer {
         daily.numOwners = dogsInfo.numOwners;
         daily.block = blockId;
         daily.save();
+
+        let monthly = dogs.getOrCreateMonthlySnapshot(timestamp);
+        monthly.numOwners = dogsInfo.numOwners;
+        monthly.block = blockId;
+        monthly.save();
 
         // if token is 0, one less owner
         if (account.numTokens.equals(integer.ZERO)) {
@@ -110,6 +120,12 @@ export namespace transfer {
         daily.numOwners = dogsInfo.numOwners;
         daily.block = blockId;
         daily.save();
+
+        let monthly = dogs.getOrCreateMonthlySnapshot(timestamp);
+        monthly.monthlyTransfersCount = monthly.monthlyTransfersCount + 1;
+        monthly.numOwners = dogsInfo.numOwners;
+        monthly.block = blockId;
+        monthly.save();
 
         let transaction = transactions.getNewTransfer(seller.id, buyer.id, tokenIdStr, timestamp, blockId);
         transaction.save();

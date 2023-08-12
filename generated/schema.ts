@@ -790,6 +790,87 @@ export class DailySnapshot extends Entity {
   }
 }
 
+export class MonthlySnapshot extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save MonthlySnapshot entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type MonthlySnapshot must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("MonthlySnapshot", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): MonthlySnapshot | null {
+    return changetype<MonthlySnapshot | null>(
+      store.get_in_block("MonthlySnapshot", id)
+    );
+  }
+
+  static load(id: string): MonthlySnapshot | null {
+    return changetype<MonthlySnapshot | null>(store.get("MonthlySnapshot", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get block(): string {
+    let value = this.get("block");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set block(value: string) {
+    this.set("block", Value.fromString(value));
+  }
+
+  get numOwners(): BigInt {
+    let value = this.get("numOwners");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set numOwners(value: BigInt) {
+    this.set("numOwners", Value.fromBigInt(value));
+  }
+
+  get monthlyTransfersCount(): i32 {
+    let value = this.get("monthlyTransfersCount");
+    if (!value || value.kind == ValueKind.NULL) {
+      return 0;
+    } else {
+      return value.toI32();
+    }
+  }
+
+  set monthlyTransfersCount(value: i32) {
+    this.set("monthlyTransfersCount", Value.fromI32(value));
+  }
+}
+
 export class TokenLoader extends Entity {
   _entity: string;
   _field: string;
