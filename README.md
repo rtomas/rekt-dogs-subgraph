@@ -20,14 +20,14 @@ https://opensea.io/collection/rektdogs
 
 **Deploy the subgraph**
 
-1. generate code:
+1. generate code for the types of the schema:
    `graph codegen`
 
-2. build
+2. build the subgraph
    `yarn build`
 
-3. authenticate
+3. authenticate with the graph
    `graph auth --product hosted-service <hash>`
 
-4. deploy
+4. deploy in hosted service
    `graph deploy --product hosted-service rtomas/rekt-dogs`
